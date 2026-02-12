@@ -83,7 +83,17 @@ app.put('/api/todos/:id', (req, res) => {
     return res.status(404).json({ error: 'Todo not found' });
   }
   
-  todos[todoIndex].completed = true;
+  // Toggle the completion status (true becomes false, false becomes true)
+  todos[todoIndex].completed = !todos[todoIndex].completed;
+
+  // Use writeTodos to persist changes and check if successful
+  if (writeTodos(todos)) {
+    // Return the updated todo item and prevent timeout [cite: 35]
+    res.json(todos[todoIndex]);
+  } else {
+    // Handle case where file writing fails
+    res.status(500).json({ error: 'Failed to update todo file' });
+  }
 });
 
 // Delete a todo
