@@ -156,6 +156,25 @@ describe('Todo API Endpoints', () => {
     });
   });
 
+  describe('PUT /api/todos/:id/edit', () => {
+    test('should successfully update todo text', async () => {
+      // Create a todo to edit
+      const createResponse = await request(app)
+        .post('/api/todos')
+        .send({ text: 'Before Edit' });
+      
+      const todoId = createResponse.body.id;
+
+      // Update the text
+      const response = await request(app)
+        .put(`/api/todos/${todoId}/edit`)
+        .send({ text: 'After Edit' });
+
+      expect(response.status).toBe(200);
+      expect(response.body.text).toBe('After Edit');
+    });
+  });
+  
   describe('DELETE /api/todos/:id', () => {
     test('should delete a todo', async () => {
       // Create a todo
@@ -248,4 +267,6 @@ describe('Todo API Endpoints', () => {
       expect(response.body[2].text).toBe('Todo 3');
     });
   });
+  
 });
+
